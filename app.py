@@ -4,8 +4,8 @@ import plotly.express as px
 from PIL import Image
 
 st.set_page_config(page_title='Survey Results')
-st.header('Survey Results 2021')
-st.subheader('Was the tutorial helpful?')
+st.header('Survey Results 2023')
+st.subheader('Please Notify Your Sensitivity in Day Scale')
 
 ### --- LOAD DATAFRAME
 excel_file = 'Survey_Results.xlsx'
@@ -23,33 +23,33 @@ df_participants = pd.read_excel(excel_file,
 df_participants.dropna(inplace=True)
 
 # --- STREAMLIT SELECTION
-department = df['Department'].unique().tolist()
-ages = df['Age'].unique().tolist()
+System-Elements = df['System-Elements'].unique().tolist()
+times = df['Age'].unique().tolist()
 
-age_selection = st.slider('Age:',
-                        min_value= min(ages),
-                        max_value= max(ages),
-                        value=(min(ages),max(ages)))
+Time_selection = st.slider('Time:',
+                        min_value= min(Times),
+                        max_value= max(Times),
+                        value=(min(Times),max(Times)))
 
-department_selection = st.multiselect('Department:',
-                                    department,
-                                    default=department)
+System-Elements_selection = st.multiselect('System-Elements:',
+                                    System-Elements,
+                                    default=System-Elements)
 
 # --- FILTER DATAFRAME BASED ON SELECTION
-mask = (df['Age'].between(*age_selection)) & (df['Department'].isin(department_selection))
+mask = (df['Time'].between(*Time_selection)) & (df['System-Elements'].isin(System-Elements_selection))
 number_of_result = df[mask].shape[0]
 st.markdown(f'*Available Results: {number_of_result}*')
 
 # --- GROUP DATAFRAME AFTER SELECTION
-df_grouped = df[mask].groupby(by=['Rating']).count()[['Age']]
-df_grouped = df_grouped.rename(columns={'Age': 'Votes'})
+df_grouped = df[mask].groupby(by=['Humidity']).count()[['Time']]
+df_grouped = df_grouped.rename(columns={'Time': 'Temperature'})
 df_grouped = df_grouped.reset_index()
 
 # --- PLOT BAR CHART
 bar_chart = px.bar(df_grouped,
-                   x='Rating',
-                   y='Votes',
-                   text='Votes',
+                   x='Humidity',
+                   y='Temperature',
+                   text='Temperature',
                    color_discrete_sequence = ['#F63366']*len(df_grouped),
                    template= 'plotly_white')
 st.plotly_chart(bar_chart)
@@ -64,8 +64,8 @@ col2.dataframe(df[mask])
 
 # --- PLOT PIE CHART
 pie_chart = px.pie(df_participants,
-                title='Total No. of Participants',
+                title='Priorities',
                 values='Participants',
-                names='Departments')
+                names='System-Elementss')
 
 st.plotly_chart(pie_chart)
